@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpServer;
 
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 
@@ -27,7 +28,7 @@ public class HTTPServer implements Runnable {
     private void startHTTPServer() throws IOException {
         isRunning = true;
         httpServer = HttpServer.create(new InetSocketAddress(8081), 0);
-        System.out.println("HTTP spuštěn na adrese: "+ httpServer.getAddress());
+        System.out.println("HTTP spuštěn na adrese: "+ InetAddress.getLocalHost());
         httpServer.createContext("/", new RegisterHandler());
         httpServer.createContext("/sendEmail", new EmailPageHandler());
         httpServer.setExecutor(null);
