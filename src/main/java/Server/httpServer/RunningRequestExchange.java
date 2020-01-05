@@ -16,7 +16,7 @@ public class RunningRequestExchange implements Runnable {
 
     public RunningRequestExchange(HttpExchange exchange) {
         this.exchange = exchange;
-        exchange.getResponseHeaders().add("Access-control-allow-origin", "*");
+        exchange.getResponseHeaders().add("Access-control-allow-origin", "http://sem-4iz268-ficm01.webzdarma.cz");
     }
 
     @Override
@@ -37,14 +37,14 @@ public class RunningRequestExchange implements Runnable {
         InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), "utf-8");
         BufferedReader br = new BufferedReader(isr);
         String query = br.readLine();
-        System.out.println("POST z adresy: " + exchange.getRemoteAddress()+" a daty: "+query);
+        System.out.println("POST z adresy: " + exchange.getRemoteAddress() + " a daty: " + query);
 
         EmailHandler emailHandler = new EmailHandler();
         emailHandler.parseData(query);
         emailHandler.sentEmail();
 
 
-        exchange.sendResponseHeaders(204,-1);
+        exchange.sendResponseHeaders(204, -1);
 
     }
 
