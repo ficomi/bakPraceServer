@@ -8,7 +8,7 @@ package Network.Client;
 import Network.Matchmaking.Matchmaking;
 import Network.Commands.*;
 import Network.Network;
-import Security.Communication;
+import Security.Cipher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,8 +19,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.logging.Level;
+import java.util.UUID;
 
 /**
  * Thread který se stará a spouští příkazy odeslané klientem.
@@ -36,15 +35,18 @@ public class RunningClient implements Runnable {
     private final CommandMap mapOfCommands;
     private final RegistredClients regClients;
     private boolean isThisThreadRunning = true;
-    private ArrayList<Socket> socket;
+
+    private final String ConnectionID;
     private String clientName;
     private boolean isEncrypted = false;
 
     public RunningClient(ArrayList<Socket> socket, Network network, RegistredClients regClients, Matchmaking matchmaking) {
-        this.socket = socket;
+
         try {
+            if(!socket.isEmpty()){
             writer = new PrintWriter(new OutputStreamWriter(socket.get(socket.size() - 1).getOutputStream(), "UTF-8"), true);
             reader = new BufferedReader(new InputStreamReader(socket.get(socket.size() - 2).getInputStream(), "UTF-8"));
+            }
 
         } catch (IOException e) {
             logger.error( "Chyba navázání spojení s clientem: ",e);
@@ -53,6 +55,7 @@ public class RunningClient implements Runnable {
         this.regClients = regClients;
         this.matchmaking = matchmaking;
         mapOfCommands = new CommandMap();
+        ConnectionID = UUID.randomUUID().toString();
 
     }
 
@@ -80,7 +83,7 @@ public class RunningClient implements Runnable {
            
                 String message = reader.readLine();
             System.out.println("Přijatá orig msg: "+message);
-                if (isEncrypted){message = Communication.stringDecrypt(message);}
+                if (isEncrypted){message = Cipher.decrypt(message,ConnectionID);}
             System.out.println("Přijatá dešifrovaná msg: "+message+" "+isEncrypted);
 
 
@@ -97,7 +100,7 @@ public class RunningClient implements Runnable {
                         if (!message.isEmpty()) {
                             try {
                                 if (isEncrypted){
-                                    message = Communication.stringEncrypt(message);
+                                    message = Cipher.encrypt(message,ConnectionID);
                                 }
                             writer.println(message);
                             writer.flush();
@@ -117,7 +120,7 @@ public class RunningClient implements Runnable {
 
                 isThisThreadRunning = false;
                 matchmaking.removeActivePlayer(clientName);
-                regClients.getMesClients().removeMessageClient(clientName);
+                matchmaking.getMesClients().removeMessageClient(ConnectionID);
                 logger.error("Stracení komunikace s clientem: " + clientName,i);
                 logger.error("Nepodařilo se ukončit všechna spojení.");
 
@@ -144,4 +147,6 @@ public class RunningClient implements Runnable {
     public void setEncrypted(boolean encrypted) {
         isEncrypted = encrypted;
     }
+
+    public String getConnectionID(){return ConnectionID;}
 }

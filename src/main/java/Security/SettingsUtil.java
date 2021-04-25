@@ -10,7 +10,7 @@ public final class SettingsUtil {
 
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private static String TLS_VERSION;
+    private static String SYM_ALGORITHM;
     private static int SYM_KEY_SIZE;
 
     private static String ASYM_ALGORITHM;
@@ -44,7 +44,7 @@ public final class SettingsUtil {
 
         try {
             Wini ini = new Wini(new File(SETTING_FILE_PATH));
-            TLS_VERSION = ini.get("APPLICATION","SYM_ALGORITHM", String.class);
+            SYM_ALGORITHM = ini.get("APPLICATION","SYM_ALGORITHM", String.class);
             ASYM_ALGORITHM = ini.get("APPLICATION","ASYM_ALGORITHM", String.class);
             SYM_KEY_SIZE = ini.get("APPLICATION","SYM_KEY_SIZE", int.class);
             ASYM_KEY_SIZE = ini.get("APPLICATION","ASYM_KEY_SIZE", int.class);
@@ -137,8 +137,8 @@ public final class SettingsUtil {
         return HASH_ALGORITHM;
     }
 
-    public static String getTlsVersion() {
-        return TLS_VERSION;
+    public static String getSymAlgorithm() {
+        return SYM_ALGORITHM;
     }
 
     public static int getSaltSize() {

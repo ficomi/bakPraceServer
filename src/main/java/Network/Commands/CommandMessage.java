@@ -28,7 +28,7 @@ public class CommandMessage implements ICommands{
     @Override
     public String doCommand(RunningClient rClient,RegistredClients regClients,PrintWriter writer,BufferedReader reader,Matchmaking matchmaking,String[] values) {
         logger.debug("Prijata zprava z chatu a rezeslána všem");
-        regClients.getMesClients().sentToAllMessageClients(values[1]+"/"+values[2]);
+        matchmaking.getMesClients().sentToAllMessageClients(values[1]+"/"+values[2]);
        return""; // zde by se mohlo odesilat potvrzeni ze se vsem odeslala zprava
     }
 

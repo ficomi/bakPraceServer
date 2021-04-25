@@ -10,8 +10,10 @@ import Database.Entities.Client;
 import Network.Client.GameClient;
 import Network.Client.RegistredClients;
 
+import Network.Client.RunningClient;
+import Network.Messange.MessageClients;
 import Network.Network;
-import Security.Communication;
+import Security.Cipher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,8 +22,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
+import java.util.HashMap;
 
 
 /**
@@ -33,27 +34,30 @@ import java.util.logging.Level;
 
 public class Matchmaking {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private ArrayList<GameClient> searchingClients;
-    private ArrayList<GameClient> playingClients;
-    private ArrayList<String> activeClient;
-    private ConcurrentHashMap<String, Thread> threadMap;
-    private Network network;
-    private RegistredClients regClients;
+    private final ArrayList<GameClient> searchingClients;
+    private final ArrayList<GameClient> playingClients;
+    private final HashMap<String,RunningClient> activeClient;
+
+    private MessageClients mesClients;
+
+    private final Network network;
+    private final RegistredClients regClients;
 
     public Matchmaking(Network network) {
         this.network = network;
         searchingClients = new ArrayList<>();
-        activeClient = new ArrayList<>();
+        activeClient = new HashMap<>();
         regClients = network.getRegClients();
-        threadMap = new ConcurrentHashMap<>();
+        mesClients = new MessageClients(this);
+
         playingClients = new ArrayList<>();
         searchForGame();
     }
 
 
-    public synchronized void addClientToSearch(Client client, PrintWriter writer, BufferedReader reader) {
+    public synchronized void addClientToSearch(Client client, PrintWriter writer, BufferedReader reader,String ConnectionID) {
         if (!searchingClients.stream().anyMatch(v -> v.getName().equals(client.getName()))) {
-            searchingClients.add(new GameClient(writer, reader, client.getPasswd(),client.getElo(), client.getSalt(), client.getName()));
+            searchingClients.add(new GameClient(writer, reader, client.getPasswd(),client.getElo(), client.getSalt(), client.getName(),ConnectionID));
             sortClients();
         }
 
@@ -89,9 +93,6 @@ public class Matchmaking {
 
     }
 
-    public synchronized Thread getGameThread(String name) {
-        return threadMap.get(name);
-    }
 
     private synchronized void sortClients() {
         Collections.sort(searchingClients);
@@ -111,10 +112,10 @@ public class Matchmaking {
                             playingClients.add(searchingClients.get(0));
                             playingClients.add(searchingClients.get(1));
 
-                            searchingClients.get(0).getWriter().println(Communication.stringEncrypt("SGAME/" + searchingClients.get(1).getName() + "/" + searchingClients.get(1).getElo() + "/true/;"));
-                            searchingClients.get(1).getWriter().println(Communication.stringEncrypt("SGAME/" + searchingClients.get(0).getName() + "/" + searchingClients.get(0).getElo() + "/false/;"));
-                            regClients.getMesClients().removeMessageClient(searchingClients.get(0).getName());
-                            regClients.getMesClients().removeMessageClient(searchingClients.get(1).getName());
+                            searchingClients.get(0).getWriter().println(Cipher.encrypt("SGAME/" + searchingClients.get(1).getName() + "/" + searchingClients.get(1).getElo() + "/true/;", searchingClients.get(0).getConnectionID()));
+                            searchingClients.get(1).getWriter().println(Cipher.encrypt("SGAME/" + searchingClients.get(0).getName() + "/" + searchingClients.get(0).getElo() + "/false/;", searchingClients.get(1).getConnectionID()));
+                            getMesClients().removeMessageClient(searchingClients.get(0).getConnectionID());
+                            getMesClients().removeMessageClient(searchingClients.get(1).getConnectionID());
 
                             searchingClients.remove(0);
                             searchingClients.remove(0);
@@ -135,25 +136,28 @@ public class Matchmaking {
         return searchingClients;
     }
 
-    public synchronized ConcurrentHashMap<String, Thread> getThreadMap() {
-        return threadMap;
+
+
+    public synchronized RunningClient getActivePlayer(String ConnectionID) {
+        return activeClient.get(ConnectionID);
+
     }
 
-    public synchronized void addToActiveClients(String name) {
-        activeClient.add(name);
+    public synchronized void addToActiveClients(RunningClient client) {
+        activeClient.put(client.getConnectionID(),client);
     }
 
-    public synchronized boolean isActivePlayer(String name) {
-        return activeClient.stream().anyMatch(v -> v.equals(name));
+    public synchronized boolean isActivePlayer(String ConnectionID) {
+        return activeClient.containsKey(ConnectionID);
     }
 
-    public synchronized void removeActivePlayer(String Name) {
-        if (isActivePlayer(Name)) {
-            activeClient.remove(Name);
+    public synchronized void removeActivePlayer(String ConnectionID) {
+        if (isActivePlayer(ConnectionID)) {
+            activeClient.remove(ConnectionID);
         }
     }
 
-    public synchronized ArrayList<String> getActiveClients() {
+    public synchronized HashMap<String,RunningClient> getActiveClients() {
         return activeClient;
     }
 
@@ -161,4 +165,7 @@ public class Matchmaking {
         return playingClients;
     }
 
+    public MessageClients getMesClients() {
+        return mesClients;
+    }
 }

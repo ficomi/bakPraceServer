@@ -8,9 +8,8 @@ package Network;
 import Network.Matchmaking.Matchmaking;
 import Network.Client.RegistredClients;
 import Network.Client.RunningClient;
-import Security.Communication;
+import Security.Cipher;
 import Security.Passwords;
-import Security.SettingsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,8 +19,6 @@ import java.util.ArrayList;
 
 import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.logging.Level;
 
 
 /**
@@ -58,8 +55,8 @@ public class Network implements Runnable {
             //nepodarilo se vytvorit server
         }
         try {
-            Communication.setSetting();
-            Communication.createKeys();
+            Cipher.setSettings();
+            Cipher.createKeys();
 
         } catch (NoSuchAlgorithmException e) {
             logger.error("Chyba při vytvoření klíčů ",e);
@@ -101,7 +98,7 @@ public class Network implements Runnable {
     private void recClient() {
 
         clients.add(new Thread(new RunningClient(client, this, regClients, matchmaking)));
-    logger.debug("Spuštěn thread pro clienta.");
+        logger.debug("Spuštěn thread pro clienta.");
         clients.get(clients.size() - 1).start();
 
     }

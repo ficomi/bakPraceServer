@@ -5,6 +5,9 @@
  */
 package Network.Messange;
 
+import Network.Client.RunningClient;
+import Network.Matchmaking.Matchmaking;
+
 import java.util.HashMap;
 
 
@@ -15,16 +18,18 @@ import java.util.HashMap;
 public class MessageClients {
 
     private HashMap<String, MessageClient> messageClients;
+    private Matchmaking matchmaking;
 
-    public MessageClients() {
+    public MessageClients(Matchmaking matchmaking) {
         messageClients = new HashMap<>();
+        this.matchmaking = matchmaking;
 
     }
 
-    public synchronized void addToMessageClients(String name, MessageClient client) {
+    public synchronized void addToMessageClients(String connectionID, MessageClient client) {
 
-        if (!messageClients.containsKey(name)) {
-            messageClients.put(name, client);
+        if (!messageClients.containsKey(connectionID)) {
+            messageClients.put(connectionID, client);
         }
 
     }
@@ -36,10 +41,9 @@ public class MessageClients {
         return null;
     }
 
-    public  synchronized void removeMessageClient(String name) {
-        if (messageClients.containsKey(name)) {
-            messageClients.remove(name);
-        }
+    public  synchronized void removeMessageClient(String ConnectionID) {
+        messageClients.remove(ConnectionID);
+
     }
 
     public  synchronized void sentToAllMessageClients(String message){

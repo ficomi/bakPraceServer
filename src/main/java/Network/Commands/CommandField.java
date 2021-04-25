@@ -8,13 +8,12 @@ package Network.Commands;
 import Network.Client.RegistredClients;
 import Network.Client.RunningClient;
 import Network.Matchmaking.Matchmaking;
-import Security.Communication;
+import Security.Cipher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
-import java.util.logging.Level;
 
 /**
  *
@@ -31,7 +30,7 @@ public class CommandField implements ICommands {
        
 
         try {
-            matchmaking.getPlayingClientByName(values[values.length-1]).getWriter().println(Communication.stringEncrypt("FIELD/"+values[1]+"/"+values[2]+"/"+values[3]+"/;"));
+            matchmaking.getPlayingClientByName(values[values.length-1]).getWriter().println(Cipher.encrypt("FIELD/"+values[1]+"/"+values[2]+"/"+values[3]+"/;",rClient.getConnectionID()));
             matchmaking.getPlayingClientByName(values[values.length-1]).getWriter().flush();
             logger.debug("Přijato a odesláno pro: "+values[values.length-1]);
             

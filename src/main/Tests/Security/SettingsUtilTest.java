@@ -43,7 +43,7 @@ public class SettingsUtilTest {
         SettingsUtil su = new SettingsUtil("src\\main\\resources\\test_settings.ini");
 
         assertEquals(5010, SettingsUtil.getPORT());
-        assertEquals("TESTSYM", SettingsUtil.getTlsVersion());
+        assertEquals("TESTSYM", SettingsUtil.getSymAlgorithm());
         assertEquals(128, SettingsUtil.getSymKeySize());
         assertEquals("TESTASYM", SettingsUtil.getAsymAlgorithm());
         assertEquals(3072, SettingsUtil.getAsymKeySize());

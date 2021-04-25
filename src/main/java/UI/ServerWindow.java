@@ -163,7 +163,7 @@ public class ServerWindow extends javax.swing.JFrame {
            
             JActiveGames.setText(getRunningGamesToText(NETWORK.getMatchmaking().getPlayingClients()));
             jSearchngPlayers.setText(getSearchingPlayersToString(NETWORK.getMatchmaking().getSearchingClients()));
-            jActivePlayers.setText(getActivePlayersToString(NETWORK.getMatchmaking().getActiveClients()));
+            //jActivePlayers.setText(getActivePlayersToString(NETWORK.getMatchmaking().getActiveClients()));
         }
 
     }

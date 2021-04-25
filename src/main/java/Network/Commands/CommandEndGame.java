@@ -11,13 +11,12 @@ import Network.Matchmaking.Matchmaking;
 import Network.Client.RegistredClients;
 import Network.Client.RunningClient;
 import Network.Messange.MessageClient;
-import Security.Communication;
+import Security.Cipher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
-import java.util.logging.Level;
 
 
 /**
@@ -57,11 +56,11 @@ public class CommandEndGame implements ICommands {
             for (int i = 0; i < players.length; i++) {
                 players[i] = matchmaking.getPlayingClientByName(values[i + 1]);
                 if (players[i] != null) {
-                    players[i].getWriter().println(Communication.stringEncrypt("UPDATE/" + regClients.getClientFromRegClientsById(regClients.getIdByName(values[i + 1])).getElo() + ";"));
+                    players[i].getWriter().println(Cipher.encrypt("UPDATE/" + regClients.getClientFromRegClientsById(regClients.getIdByName(values[i + 1])).getElo() + ";",rClient.getConnectionID()));
                     players[i].getWriter().flush();
-                    regClients.getMesClients().addToMessageClients(matchmaking.getPlayingClientByName(values[i + 1]).getName(), new MessageClient(matchmaking.getPlayingClientByName(values[i + 1]).getWriter()));
+                    matchmaking.getMesClients().addToMessageClients(matchmaking.getPlayingClientByName(values[i + 1]).getConnectionID(), new MessageClient(matchmaking.getPlayingClientByName(values[i + 1]).getWriter(),matchmaking.getPlayingClientByName(values[i + 1]).getConnectionID()));
                     matchmaking.removePlayingClient(values[i + 1]);
-                    regClients.getMesClients().addToMessageClients(values[i + 1], new MessageClient(players[i].getWriter()));
+                    matchmaking.getMesClients().addToMessageClients(matchmaking.getPlayingClientByName(values[i + 1]).getConnectionID(), new MessageClient(players[i].getWriter(),players[i].getConnectionID()));
                     logger.debug("Úspěšně ukončena hra pro :" + players[i].getName());
                 } else {
                     logger.debug("Neco se stalo");

@@ -8,14 +8,13 @@ package Network.Commands;
 import Network.Matchmaking.Matchmaking;
 import Network.Client.RegistredClients;
 import Network.Client.RunningClient;
-import Security.Communication;
+import Security.Cipher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.Base64;
-import java.util.logging.Level;
 
 /**
  * Tato třída reprezentuje co se stane když příjde příkaz STARTCOM Oveřuje
@@ -36,7 +35,7 @@ public class CommandStartCommunication implements ICommands {
                 key += "/" + values[i];
             }
             key = key.substring(1,key.length());
-            Communication.setClientPublicKey(rClient, Base64.getDecoder().decode(key));
+            Cipher.setClientPublicKey(rClient.getConnectionID(), Base64.getDecoder().decode(key));
             System.out.println("Přijat klíč: " + key);
 
         } catch (Exception e) {
@@ -46,7 +45,7 @@ public class CommandStartCommunication implements ICommands {
 
         try {
 
-            return "SETCOMMUNICATION/"+Communication.getEncryptedAESKey(rClient)+";";
+            return "SETCOMMUNICATION/"+ Cipher.getEncryptedAESKey(rClient.getConnectionID())+";";
 
         } catch (Exception e) {
             logger.error("Nepovedlo se encryptovat AES klíč:", e);

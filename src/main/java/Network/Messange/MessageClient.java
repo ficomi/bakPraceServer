@@ -6,7 +6,7 @@
 package Network.Messange;
 
 
-import Security.Communication;
+import Security.Cipher;
 
 import java.io.PrintWriter;
 
@@ -17,9 +17,11 @@ import java.io.PrintWriter;
 public class MessageClient {
    
     PrintWriter writer;
+    String ConnectionID;
 
-    public MessageClient(PrintWriter writer) {
- 
+    public MessageClient(PrintWriter writer, String ConnectionID) {
+
+        this.ConnectionID = ConnectionID;
         this.writer = writer;
     }
 
@@ -30,7 +32,7 @@ public class MessageClient {
     } 
     
     public void sentMessage(String message) throws Exception{
-     writer.println(Communication.stringEncrypt("RECMSG/"+message+";"));
+     writer.println(Cipher.encrypt("RECMSG/"+message+";",ConnectionID));
      writer.flush();
     }
 }

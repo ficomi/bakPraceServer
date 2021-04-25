@@ -25,17 +25,12 @@ public class RegistredClients {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
-    private MessageClients mesClients;
     private Passwords psswd;
     private DatabaseController db;
 
     public RegistredClients() {
         psswd = new Passwords();
         db = new DatabaseController();
-        mesClients = new MessageClients();
-       
-
     }
 
     public synchronized boolean addClinetToRegClients(String name, String passwd) {
@@ -73,9 +68,6 @@ public class RegistredClients {
       return db.getClients().stream().anyMatch(v -> name.equals(v.getName()));
     }
 
-    public synchronized MessageClients getMesClients() {
-        return mesClients;
-    }
     
     public synchronized void updateClientsAfterGame(Client[] clients){
         for (Client c : clients) {

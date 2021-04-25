@@ -26,12 +26,12 @@ public class CommandStartSearching implements ICommands {
     private final String NAME = StringCommands.SSEARCH.toString().toUpperCase();
 
     @Override
-    public String doCommand(RunningClient rClient,RegistredClients regClients,PrintWriter writer,BufferedReader reader,Matchmaking matchmaking,String[] values) 
+    public String doCommand(RunningClient rClient,RegistredClients regClients,PrintWriter writer,BufferedReader reader,Matchmaking matchmaking,String[] values)
     {
    
     if(Boolean.valueOf(values[3]) && regClients.isRegisteredClient(values[1],values[2])){
         logger.debug("Přidání clienta do front na hru: "+values[1]);
-     matchmaking.addClientToSearch(regClients.getClientFromRegClientsById(regClients.getIdByName(values[1])),writer,reader);
+     matchmaking.addClientToSearch(regClients.getClientFromRegClientsById(regClients.getIdByName(values[1])),writer,reader,rClient.getConnectionID());
     
         return "SSEARCH/add";
     }else{

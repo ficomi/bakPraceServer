@@ -18,12 +18,14 @@ public class GameClient extends Client implements Comparable<GameClient>{
 
     PrintWriter writer;
     BufferedReader reader;
+    private String ConnectionID;
 
 
-    public GameClient(PrintWriter writer, BufferedReader reader, byte[] passwd,int elo, byte[] salt, String name) {
+    public GameClient(PrintWriter writer, BufferedReader reader, byte[] passwd,int elo, byte[] salt, String name,String ConnectionID) {
         super(passwd, salt, name);
         this.writer = writer;
         this.reader = reader;
+        this.ConnectionID = ConnectionID;
         setElo(elo);
     } 
     
@@ -50,7 +52,12 @@ public class GameClient extends Client implements Comparable<GameClient>{
       int compereElo = u.getElo();
     return compereElo - this.getElo(); // Od nejvyssiho
   }
-}  
+
+    public String getConnectionID() {
+        return ConnectionID;
+    }
+}
+
     
     
     

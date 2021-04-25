@@ -35,8 +35,8 @@ public class CommandLogin implements ICommands {
             if (regClients.isRegisteredClient(values[1], values[2])) {
                 logger.debug("Úspěšně přihlášen client: " + values[1]);
                 rClient.setClientName(values[1]);
-                matchmaking.addToActiveClients(values[1]);
-                regClients.getMesClients().addToMessageClients(values[1], new MessageClient(writer));
+                matchmaking.addToActiveClients(rClient);
+                matchmaking.getMesClients().addToMessageClients(rClient.getConnectionID(), new MessageClient(writer,rClient.getConnectionID()));
                 return "LOG/" + values[1] + "/" + values[2] + "/" + regClients.getClientFromRegClientsById(regClients.getIdByName(values[1])).getElo() + ";";
             }
         }
