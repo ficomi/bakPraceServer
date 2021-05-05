@@ -43,7 +43,7 @@ public final class Cipher {
 
     public static void setSettings(){
         Cipher.SYM_ALGORITHM = SettingsUtil.getSymAlgorithm();
-        Cipher.ASYM_ALGORITHM = SettingsUtil.getSymAlgorithm();
+        Cipher.ASYM_ALGORITHM = SettingsUtil.getAsymAlgorithm();
         Cipher.ASYM_KEY_SIZE = SettingsUtil.getAsymKeySize();
         Cipher.SYM_KEY_SIZE = SettingsUtil.getSymKeySize();
     }
@@ -118,12 +118,13 @@ public final class Cipher {
 
     }
 
-    public static void setClientPublicKey(String connectionID, byte[] serverPublicKey) throws Exception{
-        clientPublicKeys.put(connectionID, KeyFactory.getInstance(ASYM_ALGORITHM).generatePublic(new X509EncodedKeySpec(serverPublicKey)));
+    public static void setClientPublicKey(String connectionID, byte[] clientPublicKey) throws Exception{
+        clientPublicKeys.put(connectionID, KeyFactory.getInstance(ASYM_ALGORITHM).generatePublic(new X509EncodedKeySpec(clientPublicKey)));
     }
 
 
     public static String getEncryptedAESKey(String ConnectionID) throws Exception{
+        System.out.println("NEEXISTUJE ConnectionID: "+clientSecretKeys.containsKey(ConnectionID));
         return Base64.getEncoder().encodeToString(encryptAESKey(clientPublicKeys.get(ConnectionID),secKey));
 
     }
@@ -138,6 +139,7 @@ public final class Cipher {
     public static byte[] encryptAESKey(PublicKey clientPubKey, SecretKey secKey) throws Exception
     {
         javax.crypto.Cipher cipher = javax.crypto.Cipher.getInstance(ASYM_ALGORITHM);
+        logger.debug("SYMKEY ----> "+Base64.getEncoder().encodeToString(secKey.getEncoded()));
         cipher.init(javax.crypto.Cipher.ENCRYPT_MODE,clientPubKey);
         return  cipher.doFinal(secKey.getEncoded());
     }

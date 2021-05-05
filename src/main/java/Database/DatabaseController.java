@@ -2,6 +2,7 @@ package Database;
 
 import Database.Entities.Client;
 import Security.Passwords;
+import Security.SettingsUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -70,6 +71,9 @@ public class DatabaseController {
      */
     private void connectToDatabase() throws ExceptionInInitializerError {
         cfg = new Configuration();
+        cfg.setProperty("hibernate.connection.url", SettingsUtil.getDbPath());
+        cfg.setProperty("hibernate.connection.username", SettingsUtil.getDbUser());
+        cfg.setProperty("hibernate.connection.password", SettingsUtil.getDbPass());
         sFactory = cfg.configure().buildSessionFactory();
         session = sFactory.openSession();
         session.beginTransaction();

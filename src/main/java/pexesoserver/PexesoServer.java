@@ -21,11 +21,12 @@ public class PexesoServer {
      */
     public static void main(String[] args) {
 
+        SettingsUtil su = new SettingsUtil("src\\main\\resources\\settings.ini");
         Network network = new Network();
         Thread NetworkThread = new Thread(network);
         NetworkThread.start();
 
-        UI ui = new UI(network);
+        //UI ui = new UI(network);
 
     }
 

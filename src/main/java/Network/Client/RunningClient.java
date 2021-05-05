@@ -69,6 +69,7 @@ public class RunningClient implements Runnable {
         mapOfCommands.AddCommandToMap(new CommandField());
         mapOfCommands.AddCommandToMap(new CommandLogin());
         mapOfCommands.AddCommandToMap(new CommandStartEncryption());
+        mapOfCommands.AddCommandToMap(new CommandSendKey());
     }
 
     @Override

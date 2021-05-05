@@ -20,14 +20,10 @@ public final class SettingsUtil {
     private static int HASH_SIZE;
     private static int HASH_ITER;
 
-    private static String DB_KEY_ALGORITHM;
-    private static String DB_KEY;
-
     private static String SALT_ALGORITHM;
     private static int SALT_SIZE;
 
     private static int PORT;
-
 
     private static String DB_PATH;
     private static String DB_NAME;
@@ -58,8 +54,6 @@ public final class SettingsUtil {
             DB_NAME = ini.get("DATABASE","DB_NAME", String.class);
             DB_PASS = ini.get("DATABASE","DB_PASS", String.class);
             DB_PATH = ini.get("DATABASE","DB_PATH", String.class);
-            DB_KEY_ALGORITHM = ini.get("DATABASE","DB_KEY_ALGORITHM", String.class);
-            DB_KEY = ini.get("DATABASE","DB_KEY", String.class);
             DB_USER = ini.get("DATABASE","DB_USER", String.class);
 
 
@@ -113,13 +107,6 @@ public final class SettingsUtil {
         return ASYM_ALGORITHM;
     }
 
-    public static String getDbKey() {
-        return DB_KEY;
-    }
-
-    public static String getDbKeyAlgorithm() {
-        return DB_KEY_ALGORITHM;
-    }
 
     public static String getDbName() {
         return DB_NAME;

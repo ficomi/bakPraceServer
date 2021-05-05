@@ -30,9 +30,8 @@ public class SettingsUtilTest {
                     "[DATABASE]\n" +
                     "DB_PATH = jdbc:mysql://localhost:3306/db_test\n" +
                     "DB_NAME = db_test\n" +
-                    "DB_PASS = 1234\n" +
-                    "DB_KEY_ALGORITHM = TESTALGODB\n" +
-                    "DB_KEY = 123456F\n");
+                    "DB_PASS = 1234\n"
+                    );
             myWriter.close();
             System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {
@@ -55,8 +54,7 @@ public class SettingsUtilTest {
         assertEquals("jdbc:mysql://localhost:3306/db_test", SettingsUtil.getDbPath());
         assertEquals("db_test", SettingsUtil.getDbName());
         assertEquals("1234", SettingsUtil.getDbPass());
-        assertEquals("123456F", SettingsUtil.getDbKey());
-        assertEquals("TESTALGODB", SettingsUtil.getDbKeyAlgorithm());
+
 
         File testFile = new File("src\\main\\resources\\test_settings.ini");
         testFile.delete();

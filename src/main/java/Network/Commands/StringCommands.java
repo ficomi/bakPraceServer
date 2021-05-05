@@ -17,5 +17,6 @@ public enum StringCommands {
     SENDMSG,
     FIELD,
     LOG,
-    STARTENCRYPT
+    STARTENCRYPT,
+    PUBKEY
 }
