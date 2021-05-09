@@ -55,6 +55,9 @@ public final class Passwords {
      * @return
      */
     public byte[] hash(char[] password, byte[] salt) {
+
+        System.out.println(SALT_LENGTH+" délka soli");
+
         PBEKeySpec spec = new PBEKeySpec(password, salt, ITERATIONS, KEY_LENGTH);
         Arrays.fill(password, Character.MIN_VALUE);
         

@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 
 
 /**

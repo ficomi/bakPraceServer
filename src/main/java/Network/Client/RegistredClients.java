@@ -35,7 +35,10 @@ public class RegistredClients {
 
     public synchronized boolean addClinetToRegClients(String name, String passwd) {
         if (!isRegisteredClient(name)) {
-            byte[] salt = psswd.getNextSalt();     
+            byte[] salt = psswd.getNextSalt();
+
+            System.out.println("Salt: "+salt+" "+salt.length);
+
             Client c = new Client(psswd.hash(passwd.toCharArray(), salt),salt,name);
             c.setElo(100);
             db.addClient(c);

@@ -15,7 +15,7 @@ public class Client implements Serializable {
      */
     @Id
     @Column(name = "id", nullable = false, unique = true)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY )
     private int id;
 
     /**

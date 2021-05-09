@@ -40,7 +40,7 @@ public class Network implements Runnable {
     public Network() {
 
         Passwords pass = new Passwords();
-
+        pass.setSettings();
 
 
         isRunnig = true;
@@ -56,6 +56,7 @@ public class Network implements Runnable {
         }
         try {
             Cipher.setSettings();
+
             Cipher.createKeys();
 
         } catch (NoSuchAlgorithmException e) {

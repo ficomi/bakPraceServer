@@ -56,11 +56,16 @@ public class CommandEndGame implements ICommands {
             for (int i = 0; i < players.length; i++) {
                 players[i] = matchmaking.getPlayingClientByName(values[i + 1]);
                 if (players[i] != null) {
-                    players[i].getWriter().println(Cipher.encrypt("UPDATE/" + regClients.getClientFromRegClientsById(regClients.getIdByName(values[i + 1])).getElo() + ";",rClient.getConnectionID()));
+
+
+                    System.out.println("Koncová zpráva pro "+values[i + 1]+" "+"UPDATE/" + regClients.getClientFromRegClientsById(regClients.getIdByName(values[i + 1])).getElo() + ";");
+                    players[i].getWriter().println(Cipher.encrypt("UPDATE/" + regClients.getClientFromRegClientsById(regClients.getIdByName(values[i + 1])).getElo() + ";",matchmaking.getPlayingClientByName(values[i + 1]).getConnectionID()));
                     players[i].getWriter().flush();
-                    matchmaking.getMesClients().addToMessageClients(matchmaking.getPlayingClientByName(values[i + 1]).getConnectionID(), new MessageClient(matchmaking.getPlayingClientByName(values[i + 1]).getWriter(),matchmaking.getPlayingClientByName(values[i + 1]).getConnectionID()));
-                    matchmaking.removePlayingClient(values[i + 1]);
+
+
+                    //matchmaking.getMesClients().addToMessageClients(matchmaking.getPlayingClientByName(values[i + 1]).getConnectionID(), new MessageClient(matchmaking.getPlayingClientByName(values[i + 1]).getWriter(),matchmaking.getPlayingClientByName(values[i + 1]).getConnectionID()));
                     matchmaking.getMesClients().addToMessageClients(matchmaking.getPlayingClientByName(values[i + 1]).getConnectionID(), new MessageClient(players[i].getWriter(),players[i].getConnectionID()));
+                    matchmaking.removePlayingClient(values[i + 1]);
                     logger.debug("Úspěšně ukončena hra pro :" + players[i].getName());
                 } else {
                     logger.debug("Neco se stalo");

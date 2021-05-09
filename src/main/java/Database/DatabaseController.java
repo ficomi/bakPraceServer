@@ -27,7 +27,7 @@ public class DatabaseController {
     private final String QUERY_CRATE_TABLE = "CREATE TABLE IF NOT EXISTS clients ("
             + "id INT unsigned NOT NULL AUTO_INCREMENT,"
             + "name VARCHAR(25)  NOT NULL,"
-            + "passwd BINARY(" + Passwords.getKEY_LENGTH()/8 + ") NOT NULL,"
+            + "passwd BLOB(" + Passwords.getKEY_LENGTH() + ") NOT NULL,"
             + "salt BINARY(" + Passwords.getSALT_LENGTH() + ") NOT NULL,"
             + "elo SMALLINT unsigned NOT NULL,"
             + "PRIMARY KEY (id)"
@@ -74,6 +74,8 @@ public class DatabaseController {
         cfg.setProperty("hibernate.connection.url", SettingsUtil.getDbPath());
         cfg.setProperty("hibernate.connection.username", SettingsUtil.getDbUser());
         cfg.setProperty("hibernate.connection.password", SettingsUtil.getDbPass());
+
+
         sFactory = cfg.configure().buildSessionFactory();
         session = sFactory.openSession();
         session.beginTransaction();
